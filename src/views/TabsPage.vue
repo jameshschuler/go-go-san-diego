@@ -12,10 +12,10 @@
           <ion-icon :icon="balloon" />
           <ion-label>GoGo!</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="favorites" href="/tabs/favorites">
+        <!-- <ion-tab-button tab="favorites" href="/tabs/favorites">
           <ion-icon :icon="heart" />
           <ion-label>Favorites</ion-label>
-        </ion-tab-button>
+        </ion-tab-button> -->
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
@@ -31,5 +31,5 @@ import {
   IonTabButton,
   IonTabs,
 } from "@ionic/vue";
-import { balloon, heart } from "ionicons/icons";
+import { balloon } from "ionicons/icons";
 </script>
