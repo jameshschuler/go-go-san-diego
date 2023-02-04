@@ -2,7 +2,7 @@ import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "io.jamesschuler.gogosandiego",
-  appName: "gogosandiego",
+  appName: "GoGo! San Diego",
   webDir: "public",
   bundledWebRuntime: false,
   server: {

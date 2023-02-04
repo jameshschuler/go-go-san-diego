@@ -6,8 +6,17 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding" color="new" :fullscreen="true">
-      <div class="flex flex-col align-center justify-center h-full">
-        <div class="mb-12">
+      <div class="flex flex-col h-full">
+        <div class="flex justify-end">
+          <ion-button color="new">
+            <ion-icon
+              :icon="heartOutline"
+              color="danger"
+              size="large"
+            ></ion-icon>
+          </ion-button>
+        </div>
+        <div class="mb-12 px-2">
           <ion-text color="light">
             <h1 class="text-5xl">Let's Adventure to...</h1>
           </ion-text>
@@ -40,8 +49,14 @@
                 slot="start"
                 :icon="diceOutline"
                 color="light"
+                v-if="!loading"
               ></ion-icon>
-              <ion-text color="light">Re-roll</ion-text>
+              <ion-text color="light" v-if="!loading">Re-roll</ion-text>
+              <ion-spinner
+                name="dots"
+                color="light"
+                v-if="loading"
+              ></ion-spinner>
             </ion-button>
           </div>
         </div>
@@ -52,13 +67,19 @@
 
 <script setup lang="ts">
 import { IonIcon, IonPage } from "@ionic/vue";
-import { diceOutline } from "ionicons/icons";
+import { diceOutline, heartOutline } from "ionicons/icons";
 import { ref } from "vue";
 
-const activity = ref("???");
-const location = ref("???");
+const activity = ref<string>("???");
+const location = ref<string>("???");
+const loading = ref<boolean>(false);
 
 function rollAdventure() {
-  console.log("hello");
+  loading.value = true;
+
+  // TODO: make api call
+  setTimeout(() => {
+    loading.value = false;
+  }, 1000);
 }
 </script>
