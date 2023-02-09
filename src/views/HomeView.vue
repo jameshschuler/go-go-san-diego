@@ -18,7 +18,7 @@
         </div>
         <div class="mb-12 px-2">
           <ion-text color="light">
-            <h1 class="text-5xl">Let's Adventure to...</h1>
+            <h1 class="text-5xl">Let's Adventure!</h1>
           </ion-text>
         </div>
         <div>
@@ -38,7 +38,7 @@
               </ion-text>
             </div>
           </div>
-          <div class="flex justify-center mt-8">
+          <div class="flex justify-center mt-12">
             <ion-button
               :strong="true"
               size="large"
@@ -74,12 +74,27 @@ const activity = ref<string>("???");
 const location = ref<string>("???");
 const loading = ref<boolean>(false);
 
-function rollAdventure() {
-  loading.value = true;
+const apiUrl = "https://gogosandiego.deno.dev/api/random";
 
-  // TODO: make api call
-  setTimeout(() => {
+async function rollAdventure() {
+  loading.value = true;
+  activity.value = "???";
+  location.value = "???";
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      mode: "cors",
+    });
+    const data = await response.json();
+    const { locationName, activityDescription } = data.data;
+
+    activity.value = activityDescription;
+    location.value = locationName;
+
     loading.value = false;
-  }, 1000);
+  } catch (err) {
+    loading.value = false;
+  }
 }
 </script>
