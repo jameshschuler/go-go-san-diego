@@ -1,6 +1,11 @@
-import { faMugSaucer } from "@fortawesome/free-solid-svg-icons/faMugSaucer";
+import {
+  faCity,
+  faHouse,
+  faMugSaucer,
+  faTree,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -13,10 +18,18 @@ export default function App() {
   const apiUrl = "https://gogosandiego.deno.dev/api/random";
 
   const [location, setLocation] = useState("???");
+  const [locationTypeIcon, setLocationTypeIcon] = useState(faMugSaucer);
+
   const [activity, setActivity] = useState("???");
   const [loading, setLoading] = useState(false);
 
-  async function onPress() {
+  const locationTypeIcons = {
+    city: faCity,
+    neighborhood: faHouse,
+    park: faTree,
+  };
+
+  async function getRandom() {
     try {
       setLoading(true);
 
@@ -25,16 +38,29 @@ export default function App() {
         mode: "cors",
       });
       const data = await response.json();
-      const { locationName, activityDescription } = data.data;
+      const { locationName, locationType, activityDescription } = data.data;
 
       setLocation(locationName);
       setActivity(activityDescription);
+      setLocationTypeIcon(locationTypeIcons[locationType.toLowerCase()]);
 
       setLoading(false);
     } catch (err) {
       setLoading(false);
     }
   }
+
+  async function onPress() {
+    await getRandom();
+  }
+
+  useEffect(() => {
+    async function fetchInitialData() {
+      await getRandom();
+    }
+
+    fetchInitialData();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -43,7 +69,7 @@ export default function App() {
           {loading && <ActivityIndicator size={"large"} />}
           {!loading && (
             <>
-              <FontAwesomeIcon icon={faMugSaucer} size={64} />
+              <FontAwesomeIcon icon={locationTypeIcon} size={64} />
               <Text style={styles.outputText}>{location}</Text>
             </>
           )}
