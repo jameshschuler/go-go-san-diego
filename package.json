@@ -16,10 +16,11 @@
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
     "react-native": "0.70.5",
-    "react-native-svg": "^13.8.0"
+    "react-native-svg": "13.4.0",
+    "expo-updates": "~0.15.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.19.3"
   },
   "private": true
 }
