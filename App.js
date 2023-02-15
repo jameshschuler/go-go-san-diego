@@ -1,33 +1,19 @@
-import {
-  faCity,
-  faHouse,
-  faMugSaucer,
-  faTree,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faSun } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import OutputCard from "./components/OutputCard";
+import { activityIcons, locationTypeIcons } from "./utils/constants";
+import { camelize } from "./utils/helpers";
 
 export default function App() {
   const apiUrl = "https://gogosandiego.deno.dev/api/random";
 
   const [location, setLocation] = useState("???");
-  const [locationTypeIcon, setLocationTypeIcon] = useState(faMugSaucer);
+  const [activityIcon, setActivityIcon] = useState(faSun);
+  const [locationTypeIcon, setLocationTypeIcon] = useState(faSun);
 
   const [activity, setActivity] = useState("???");
   const [loading, setLoading] = useState(false);
-
-  const locationTypeIcons = {
-    city: faCity,
-    neighborhood: faHouse,
-    park: faTree,
-  };
 
   async function getRandom() {
     try {
@@ -38,11 +24,14 @@ export default function App() {
         mode: "cors",
       });
       const data = await response.json();
-      const { locationName, locationType, activityDescription } = data.data;
+      const { locationName, locationType, activityDescription, activityName } =
+        data.data;
 
       setLocation(locationName);
-      setActivity(activityDescription);
       setLocationTypeIcon(locationTypeIcons[locationType.toLowerCase()]);
+
+      setActivity(activityDescription);
+      setActivityIcon(activityIcons[camelize(activityName)]);
 
       setLoading(false);
     } catch (err) {
@@ -65,24 +54,12 @@ export default function App() {
   return (
     <View style={styles.container}>
       <View style={styles.outputContainer}>
-        <View style={styles.outputCard}>
-          {loading && <ActivityIndicator size={"large"} />}
-          {!loading && (
-            <>
-              <FontAwesomeIcon icon={locationTypeIcon} size={64} />
-              <Text style={styles.outputText}>{location}</Text>
-            </>
-          )}
-        </View>
-        <View style={styles.outputCard}>
-          {loading && <ActivityIndicator size={"large"} />}
-          {!loading && (
-            <>
-              <FontAwesomeIcon icon={faMugSaucer} size={64} />
-              <Text style={styles.outputText}>{activity}</Text>
-            </>
-          )}
-        </View>
+        <OutputCard
+          loading={loading}
+          title={location}
+          icon={locationTypeIcon}
+        />
+        <OutputCard loading={loading} title={activity} icon={activityIcon} />
       </View>
 
       <Pressable
@@ -109,22 +86,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginTop: 100,
     width: "100%",
-  },
-  outputText: {
-    fontSize: 32,
-  },
-  outputCard: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    marginVertical: 15,
-    width: "100%",
-    backgroundColor: "white",
-    borderRadius: 15,
-    height: 150,
   },
   actionBtn: {
     backgroundColor: "yellow",
