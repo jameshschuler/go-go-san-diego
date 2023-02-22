@@ -19,14 +19,15 @@ import {
   faUmbrellaBeach,
   faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
+import { IconMap } from "../types";
 
-export const locationTypeIcons = {
+export const locationTypeIcons: IconMap = {
   city: faCity,
   neighborhood: faHouse,
   park: faTree,
 };
 
-export const activityIcons = {
+export const activityIcons: IconMap = {
   coffee: faMugHot,
   run: faPersonRunning,
   restaurant: faUtensils,

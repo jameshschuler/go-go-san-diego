@@ -1,19 +1,23 @@
-import { faSun } from "@fortawesome/free-solid-svg-icons";
+import { faSun, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import OutputCard from "../components/OutputCard";
+import { ApiResponse, Coords } from "../types";
 import { activityIcons, locationTypeIcons } from "../utils/constants";
 import { camelize } from "../utils/helpers";
 
 export default function Home() {
   const apiUrl = "https://gogosandiego.deno.dev/api/random";
 
-  const [location, setLocation] = useState("???");
-  const [activityIcon, setActivityIcon] = useState(faSun);
-  const [locationTypeIcon, setLocationTypeIcon] = useState(faSun);
+  const [location, setLocation] = useState<string>("???");
+  const [activityIcon, setActivityIcon] = useState<IconDefinition>(faSun);
+  const [locationTypeIcon, setLocationTypeIcon] =
+    useState<IconDefinition>(faSun);
 
-  const [activity, setActivity] = useState("???");
-  const [loading, setLoading] = useState(false);
+  const [activity, setActivity] = useState<string>("???");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [coords, setCoords] = useState<Coords | undefined>();
 
   async function getRandom() {
     try {
@@ -23,15 +27,22 @@ export default function Home() {
         method: "GET",
         mode: "cors",
       });
-      const data = await response.json();
-      const { locationName, locationType, activityDescription, activityName } =
-        data.data;
+      const data = (await response.json()) as ApiResponse;
+      const {
+        coords,
+        locationName,
+        locationType,
+        activityDescription,
+        activityName,
+      } = data.data;
 
       setLocation(locationName);
       setLocationTypeIcon(locationTypeIcons[locationType.toLowerCase()]);
 
       setActivity(activityDescription);
       setActivityIcon(activityIcons[camelize(activityName)]);
+
+      setCoords(coords);
 
       setLoading(false);
     } catch (err) {
