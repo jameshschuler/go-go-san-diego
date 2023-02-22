@@ -1,7 +1,14 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
-export default function OutputCard({ title, icon, loading }) {
+interface OutputCardProps {
+  title: string;
+  icon: IconProp;
+  loading: boolean;
+}
+
+export default function OutputCard({ title, icon, loading }: OutputCardProps) {
   return (
     <View style={styles.outputCard}>
       {loading && <ActivityIndicator size={"large"} />}
