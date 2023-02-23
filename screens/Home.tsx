@@ -1,6 +1,18 @@
-import { faSun, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMap,
+  faSun,
+  IconDefinition,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import OutputCard from "../components/OutputCard";
 import { ApiResponse, Coords } from "../types";
 import { activityIcons, locationTypeIcons } from "../utils/constants";
@@ -54,6 +66,22 @@ export default function Home() {
     await getRandom();
   }
 
+  function handleMapPress() {
+    const scheme = Platform.select({
+      ios: "maps:0,0?q=",
+      android: "geo:0,0?q=",
+    });
+
+    const latLng = `${coords?.latitude},${coords?.longitude}`;
+    const label = location;
+    const url = Platform.select({
+      ios: `${scheme}${label}@${latLng}`,
+      android: `${scheme}${latLng}(${label})`,
+    });
+
+    Linking.openURL(url!);
+  }
+
   useEffect(() => {
     async function fetchInitialData() {
       await getRandom();
@@ -73,19 +101,35 @@ export default function Home() {
         <OutputCard loading={loading} title={activity} icon={activityIcon} />
       </View>
 
-      <Pressable
-        style={({ pressed }) => [
-          { ...styles.actionBtn, opacity: pressed ? 0.5 : 1.0 },
-        ]}
-        onPress={onPress}
-      >
-        <Text style={styles.actionBtnText}>Re-roll</Text>
-      </Pressable>
+      <View style={styles.actionsContainer}>
+        <Pressable
+          style={({ pressed }) => [
+            { ...styles.actionBtn, opacity: pressed ? 0.5 : 1.0 },
+          ]}
+          onPress={onPress}
+        >
+          <Text style={styles.actionBtnText}>Re-roll</Text>
+        </Pressable>
+        {coords && (
+          <Pressable
+            style={({ pressed }) => [
+              { ...styles.mapBtn, opacity: pressed ? 0.5 : 1.0 },
+            ]}
+            onPress={handleMapPress}
+          >
+            <FontAwesomeIcon icon={faMap} size={24} />
+          </Pressable>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  actionsContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
   container: {
     flex: 1,
     backgroundColor: "skyblue",
@@ -104,6 +148,17 @@ const styles = StyleSheet.create({
     width: "50%",
     borderRadius: 15,
     marginBottom: 45,
+  },
+  mapBtn: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 15,
+    marginBottom: 45,
+    marginLeft: 10,
+    width: "20%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   actionBtnText: {
     fontWeight: "600",

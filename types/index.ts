@@ -5,8 +5,8 @@ export type IconMap = {
 };
 
 export interface Coords {
-  longitude: string;
-  latitude: string;
+  longitude: Number;
+  latitude: Number;
 }
 
 export interface ActivityDetail {
